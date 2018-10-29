@@ -12,4 +12,5 @@ catboost==0.9.1.1
 lightgbm==2.1.2
 sklearn ==0.20.0
 keras==2.2.2
+cv2==3.4.3
 
