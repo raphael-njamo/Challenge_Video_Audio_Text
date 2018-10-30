@@ -20,12 +20,14 @@ stop.update(['.', ',', '"', "'", '?', '!', ':',
 data['Text'] = data['Text'].apply(
     lambda x: ' '.join([i for i in word_tokenize(x) if i not in stop]))
 
+
 tfidf = TfidfVectorizer(max_df=0.95, min_df=2)
 
 tfidf = pd.DataFrame(tfidf.fit_transform(data['Text']).todense())
 
-data = pd.concat([data,tfidf],axis = 'rows')
+data = pd.concat([data,tfidf],axis = 'columns')
 data.drop(['Text'],axis='columns',inplace=True)
+assert data.isnull().sum().sum() == 0
 if replique:
     data.to_csv('features/text/tfidf_replique.csv',index=False,sep='§')
 else :
