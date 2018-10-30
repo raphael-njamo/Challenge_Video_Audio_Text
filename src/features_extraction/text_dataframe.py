@@ -27,19 +27,19 @@ class GetText:
 
     def generate_dataframe(self):
         dataframe = pd.DataFrame(columns=['Sequence', 's_id', 'Text'])
-        for document,dict_sequence in self.get_text():
-                data = pd.DataFrame.from_dict(dict_sequence)
-                name_col = data.columns[0]
-                data['Sequence'] = name_col
-                data = data.reset_index()
-                data = data.rename(columns={name_col: 'Text', 'index': 's_id'})
-                dataframe = pd.concat([dataframe, data], axis='rows')
-        
-        dataframe.to_csv(self.path_out, index=False,sep='§')
+        for document, dict_sequence in self.get_text():
+            data = pd.DataFrame.from_dict(dict_sequence)
+            name_col = data.columns[0]
+            data['Sequence'] = name_col
+            data = data.reset_index()
+            data = data.rename(columns={name_col: 'Text', 'index': 's_id'})
+            dataframe = pd.concat([dataframe, data], axis='rows')
+
+        dataframe.to_csv(self.path_out, index=False, sep='§')
 
 
 if __name__ == '__main__':
     list_path = [f'data/text/{f}'for f in os.listdir('data/text/')]
-    list_path = [x for x in list_path if x[-4:]=='.xml']
+    list_path = [x for x in list_path if x[-4:] == '.xml']
     test = GetText(list_path, 'features/text/sequence_text.csv')
     test.generate_dataframe()
