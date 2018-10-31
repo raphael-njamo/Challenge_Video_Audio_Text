@@ -1,23 +1,15 @@
 # -*- coding: utf-8 -*-
 import os
 import cv2
+import glob
 
-
-'''
-Transform a video into frames (one frame per second)
-(to go deeper => https://www.linkedin.com/pulse/fun-opencv-video-frames-arun-das/)
-
-videopath : where the video is stored
-framepath : where the frames will be stored
-videofps : frame per second of the video
-
-TODO: check if we get the first frame of the video
-TODO: check if the functions works well with video shorter than 3 seconds
-TODO: create a function to get fps of a video
-TODO: create a function to iterate on all videos
-'''
 def video_to_frames(videopath, framepath, videofps):
-
+    """ segmentation a video to frames
+    Input  videopath a string, path who is the video
+           framepath a string, path who will store frames
+           videofps an integer, represente the number of segmentation
+    Output images with format jpg 
+    """
     # read video
     vidcap = cv2.VideoCapture(videopath)
     
@@ -41,5 +33,21 @@ def video_to_frames(videopath, framepath, videofps):
             success,image = vidcap.read()
         count += 1
         
-# test for the first video
-#video_to_frames('corpus_part1/corpus_part1/SEQ_001_VIDEO.mp4','data',30)
+
+
+def parse_videos():
+    videopath = "data/video"
+    imagepath = "data/image"
+
+    for vp in glob.iglob(f"{videopath}/*.mp4"):
+        moviename = os.path.basename(vp)
+        moviename = os.path.splitext(moviename)[0]
+        
+        moviefolder = f"{imagepath}/{moviename}"
+        
+        try: 
+            if not os.path.exists(moviefolder): 
+                os.makedirs(moviefolder) 
+        except OSError: 
+            print ('Error: Creating directory of data') 
+        video_to_frames(vp, moviefolder,30)
