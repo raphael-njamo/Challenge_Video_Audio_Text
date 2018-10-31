@@ -9,12 +9,9 @@
 import random
 import numpy as np
 import numpy.linalg as la
-import matplotlib.pyplot as plt 
 import numpy as np
-import matplotlib as mpl
 import itertools
 import csv
-import pylab as pl
 import time
 import os
 from os import listdir
@@ -23,11 +20,10 @@ import sklearn.mixture as skm
 from math import *
 from numpy import append, zeros
 from scipy.io import wavfile
-from sklearn.mixture import GMM
 from scipy import linalg
 import librosa
 import pandas as pd
-
+from tqdm import tqdm
 
 # ## Récupération des fichiers .wav
 
@@ -46,7 +42,7 @@ lins = [x for x in lins if x[-4:]=='.wav']
 
 
 matriceMFCC = {}
-for filename in lins:
+for filename in tqdm(lins):
     matriceMFCC[filename]=librosa.feature.mfcc(wavfile.read(REP+filename)[1].astype(float),n_mfcc=13)
 
 
@@ -68,7 +64,7 @@ featuresMFCC.index = [x[:7] for x in featuresMFCC.index]
 
 
 vectFeatures = {}
-for i in range(0,13):
+for i in tqdm(range(0,13)):
     vectFeatures[str(i)] = [featuresMFCC[0][x][i] for x in range(len(featuresMFCC[0]))]
 
 
@@ -82,7 +78,7 @@ np.set_printoptions(threshold=np.nan)
 # In[8]:
 
 
-for i in vectFeatures:
+for i in tqdm(vectFeatures):
     dt = pd.DataFrame({'name':featuresMFCC.index,'mfcc':vectFeatures[i]})
     dt = dt.set_index('name')
-    dt.to_csv('Challenge_Video_Audio_Text/features/audio/mfcc_'+str(i)+'.csv',header=False)
+    dt.to_csv(f'features/audio/mfcc_{i}.csv',header=False)
