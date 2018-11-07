@@ -7,22 +7,41 @@ mpl.use('TkAgg')  # or whatever other backend that you want
 import matplotlib.pyplot as plt
 import seaborn as sns; sns.set()  # for plot styling
 import warnings
-warnings.filterwarnings('ignore')
 
-data = pd.read_csv('features/text/emotion_doc.csv',sep='§')
-
+from src.models.plt import plot_cluster
 
 
+N_CLUSTERS = 3
+WHRITE_CLUSTER = True
+WHRITE_PLOT = True
 
-pca = PCA(n_components=2)
-pca = pd.DataFrame(pca.fit_transform(data.drop(['Sequence'],axis='columns')))
-pca = pca.add_prefix(f'PCA_')
+if __name__ == '__main__':
 
-model = KMeans(n_clusters=3,random_state=42,n_init=30)
+    warnings.filterwarnings('ignore')
 
-cluster = model.fit_predict(data.drop(['Sequence'],axis = 'columns'))
+    data = pd.read_csv('features/text/emotion_doc.csv',sep='§')
 
 
 
-plt.scatter(pca['PCA_0'], pca['PCA_1'], c=cluster, s=50, cmap='viridis')
-plt.show()
+
+    pca = PCA(n_components=2)
+    pca = pd.DataFrame(pca.fit_transform(data.drop(['Sequence'],axis='columns')))
+    pca = pca.add_prefix(f'PCA_')
+
+    model = KMeans(n_clusters=N_CLUSTERS,random_state=42,n_init=30)
+
+    cluster = model.fit_predict(data.drop(['Sequence'],axis = 'columns'))
+
+    cluster = pd.Series(cluster)
+    cluster.name = 'Cluster'
+
+    if WHRITE_CLUSTER:
+        result = pd.concat([data['Sequence'],cluster],axis=1)
+        result.to_csv('result/cluster_sentiment.csv',sep='§')
+
+
+    plt.scatter(pca['PCA_0'], pca['PCA_1'], c=cluster, s=50, cmap='viridis')
+    plt.show()
+
+    if WHRITE_PLOT:
+        plot_cluster(pca[['PCA_0','PCA_1']].values,data['Sequence'],cluster.values,'result/plot_cluster_sentiment.html')

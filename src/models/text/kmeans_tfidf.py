@@ -8,32 +8,38 @@ import matplotlib.pyplot as plt
 import seaborn as sns; sns.set()  # for plot styling
 import warnings
 warnings.filterwarnings('ignore')
-
-data = pd.read_csv('features/text/tfidf_doc.csv',sep='§')
-
-model = KMeans(n_clusters=2,random_state=42,n_init=30)
-
-cluster = model.fit_predict(data.drop(['Sequence'],axis = 'columns'))
-
-data['cluster'] = cluster
+from src.models.plt import plot_cluster
 
 
-svd = TruncatedSVD(n_components=2)
-svd = pd.DataFrame(svd.fit_transform(data.drop(['Sequence','cluster'],axis='columns')))
-svd = svd.add_prefix(f'Svd_')
+N_CLUSTERS = 2
+WHRITE_CLUSTER = True
+WHRITE_PLOT = True
 
-plt.scatter(svd['Svd_0'], svd['Svd_1'], c=cluster, s=50, cmap='viridis')
-plt.show()
+if __name__=='__main__':
+    
+    data = pd.read_csv('features/text/tfidf_doc.csv',sep='§')
+
+    model = KMeans(n_clusters=2,random_state=42,n_init=30)
+
+    cluster = model.fit_predict(data.drop(['Sequence'],axis = 'columns'))
+
+    data['cluster'] = cluster
+
+    cluster = pd.Series(cluster)
+    cluster.name = 'Cluster'
+
+    if WHRITE_CLUSTER:
+        result = pd.concat([data['Sequence'],cluster],axis=1)
+        result.to_csv('result/cluster_tfidf.csv',sep='§')
+
+    svd = TruncatedSVD(n_components=2)
+    svd = pd.DataFrame(svd.fit_transform(data.drop(['Sequence','cluster'],axis='columns')))
+    svd = svd.add_prefix(f'Svd_')
+
+    plt.scatter(svd['Svd_0'], svd['Svd_1'], c=cluster, s=50, cmap='viridis')
+    plt.show()
 
 
-# print(data.head())
+    if WHRITE_PLOT:
+        plot_cluster(svd[['Svd_0','Svd_1']].values,data['Sequence'],cluster.values,'result/plot_cluster_tfidf.html')
 
-# ann = pd.read_csv('data/external/Annotation .csv')
-# ann = ann[['Sequence','Violent']]
-# print(ann.head())
-# print(ann.shape)
-
-# val = pd.concat([data[['Sequence','cluster']],ann],axis = 'columns')
-# val  = val.dropna()
-
-# print(accuracy_score(val['cluster'],val['Violent']))

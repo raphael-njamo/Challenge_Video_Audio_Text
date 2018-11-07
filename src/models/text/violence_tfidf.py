@@ -1,7 +1,7 @@
 from sklearn.base import BaseEstimator, ClassifierMixin
 from sklearn.utils.validation import check_X_y, check_is_fitted
 from sklearn.linear_model import LogisticRegression
-from sklearn.model_selection import LeaveOneOut
+from sklearn.model_selection import LeaveOneOut,train_test_split
 from sklearn.metrics import f1_score, accuracy_score
 import pandas as pd
 import numpy as np
@@ -42,6 +42,10 @@ if __name__ == '__main__':
 
     X_train = data.drop(['Sequence'],axis = 1)
     Y_train = labels['Violent']
+    '''
+    Stratified ensemble
+    '''
+    
 
     model = LogisticRegression()
     # Permet de découper le jeux de données en n_splits avec un aléatoire fixé
@@ -63,9 +67,7 @@ if __name__ == '__main__':
         X_val = X_train.iloc[val_idx]
         Y_val = Y_train.iloc[val_idx]
         
-        '''Mise en log des variables à predire car dans la partie evaluation du challenge sur kaggle, ils parlent
-        de mettre en log la variable cible'''
-        
+     
         model.fit(X_fit,Y_fit)
         
         pred_fit = model.predict(X_fit)
