@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns; sns.set()  # for plot styling
 import warnings
 warnings.filterwarnings('ignore')
-from src.models.plt import plot_cluster
+from plt import plot_cluster
 
 
 N_CLUSTERS = 2

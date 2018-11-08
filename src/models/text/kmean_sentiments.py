@@ -7,8 +7,8 @@ mpl.use('TkAgg')  # or whatever other backend that you want
 import matplotlib.pyplot as plt
 import seaborn as sns; sns.set()  # for plot styling
 import warnings
-
-from src.models.plt import plot_cluster
+from evaluate_cluster import best_k
+from plt import plot_cluster
 
 
 N_CLUSTERS = 3
@@ -44,4 +44,6 @@ if __name__ == '__main__':
     plt.show()
 
     if WHRITE_PLOT:
-        plot_cluster(pca[['PCA_0','PCA_1']].values,data['Sequence'],cluster.values,'result/plot_cluster_sentiment.html')
+        plot_cluster(pca[['PCA_0', 'PCA_1']].values, data['Sequence'],
+                        cluster.values,
+                        f'result/plot_cluster_{best_k(data.drop(['Sequence'],axis = 'columns'), verbose=False)}_sentiment.html')
