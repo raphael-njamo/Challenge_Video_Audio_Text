@@ -124,6 +124,6 @@ if __name__ == '__main__':
 
     plot_cluster(lda[['LDA_0', 'LDA_1']].values, data['Sequence'],
                 cluster,
-                f'result/plot_cluster__{5}_lda22.html')
+                f'result/plot_cluster_{5}_lda_22.html')
 
 

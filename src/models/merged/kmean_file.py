@@ -3,6 +3,7 @@ import numpy as np
 from sklearn.cluster import KMeans
 from evaluate_cluster import best_k
 
+
 if __name__ == '__main__':
 
     data = pd.read_csv('features/text/nmf_tfidf_2.csv', sep='§')

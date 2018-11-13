@@ -9,7 +9,6 @@ if TF_IDF:
     data = pd.read_csv('features/text/tfidf_doc.csv',sep='§')
 else :
     data = pd.read_csv('features/text/tf_doc.csv',sep='§')
-    
 
 
 lda = LatentDirichletAllocation(n_components=N_COMPONENTS, max_iter=5,random_state=42)
