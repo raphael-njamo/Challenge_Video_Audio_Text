@@ -10,7 +10,7 @@ sns.set()  # for plot styling
 import warnings
 from evaluate_cluster import best_k
 from plt import plot_cluster
-
+from sklearn.manifold import TSNE
 
 N_CLUSTERS = 3
 WHRITE_CLUSTER = True
@@ -22,7 +22,7 @@ if __name__ == '__main__':
 
     data = pd.read_csv('features/text/emotion_doc.csv', sep='§')
 
-    pca = PCA(n_components=2)
+    pca = TSNE(n_components=2,random_state=42)
     pca = pd.DataFrame(pca.fit_transform(
         data.drop(['Sequence'], axis='columns')))
     pca = pca.add_prefix(f'PCA_')
@@ -44,4 +44,4 @@ if __name__ == '__main__':
     if WHRITE_PLOT:
         plot_cluster(pca[['PCA_0', 'PCA_1']].values, data['Sequence'],
                      cluster.values,
-                     f'result/plot_cluster_{best_k(data.drop(['Sequence'],axis = 'columns'), verbose=False)}_sentiment.html')
+                     f'result/plot_cluster_sentiment_tsne.html')

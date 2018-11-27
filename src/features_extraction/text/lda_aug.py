@@ -7,7 +7,7 @@ from sklearn.cluster import KMeans
 import plotly.graph_objs as go
 from plotly.offline import download_plotlyjs, plot, iplot
 from sklearn.metrics import silhouette_score
-
+from sklearn.manifold import TSNE
 
 def best_k(X, range_min=20, verbose=True):
 
@@ -87,12 +87,12 @@ if __name__ == '__main__':
 
     tfidf = pd.DataFrame(tfidf.fit_transform(data['Text']).todense())
 
-    lda = LatentDirichletAllocation(n_components=22, max_iter=30,random_state=42,verbose=1)
+    lda = LatentDirichletAllocation(n_components=15, max_iter=10,random_state=42,verbose=1)
     lda = pd.DataFrame(lda.fit_transform(tfidf))
     lda = lda.add_prefix(f'LDA_')
     del tfidf
 
-    pca = PCA(n_components=2)
+    pca = TSNE(n_components=2)
     lda = pd.DataFrame(pca.fit_transform(lda))
     lda = lda.add_prefix(f'LDA_')
 
@@ -108,7 +108,7 @@ if __name__ == '__main__':
 
     assert lda.isnull().sum().sum() == 0
 
-    cluster = KMeans(n_clusters=5, random_state=42,n_init=30)
+    cluster = KMeans(n_clusters=3, random_state=42,n_init=30)
     cluster = cluster.fit_predict(lda[['LDA_0','LDA_1']])
 
     best_k(lda[['LDA_0','LDA_1']])
@@ -124,6 +124,6 @@ if __name__ == '__main__':
 
     plot_cluster(lda[['LDA_0', 'LDA_1']].values, data['Sequence'],
                 cluster,
-                f'result/plot_cluster_{5}_lda_22.html')
+                f'result/plot_cluster_{3}_lda_15.html')
 
 
