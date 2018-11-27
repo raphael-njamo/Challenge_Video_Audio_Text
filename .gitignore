@@ -2,3 +2,5 @@
 *.xml
 *.wav
 *.pyc
+*.csv
+*.html
